@@ -2,6 +2,43 @@ use model::AssetDescription;
 use std::path::PathBuf;
 
 use serde::{Deserialize, Serialize};
+use uuid::Uuid;
+
+/*
+ * V3
+ */
+#[derive(Serialize, Deserialize, Debug, PartialEq, Eq, Hash)]
+#[serde(rename_all = "camelCase")]
+pub struct LegacyAssetDescriptionV3 {
+    pub name: String,
+    pub creator: String,
+    pub image_filename: Option<String>,
+    pub tags: Vec<String>,
+    pub memo: Option<String>,
+    pub booth_item_id: Option<u64>,
+    pub dependencies: Vec<Uuid>,
+    pub created_at: i64,
+    pub published_at: Option<i64>,
+}
+
+impl Into<AssetDescription> for LegacyAssetDescriptionV3 {
+    fn into(self) -> AssetDescription {
+        AssetDescription {
+            name: self.name,
+            creator: self.creator,
+            image_filename: self.image_filename,
+            tags: self.tags,
+            memo: self.memo,
+            booth_item_id: self.booth_item_id,
+            dependencies: self.dependencies,
+            created_at: self.created_at,
+            published_at: self.published_at,
+            // 旧バージョンのデータはどのデバイスが登録したか分からないため
+            // nil UUID を「不明なデバイス」として扱う。
+            registered_device_id: Uuid::nil(),
+        }
+    }
+}
 
 /*
  * V2
@@ -19,11 +56,11 @@ pub struct LegacyAssetDescriptionV2 {
     pub published_at: Option<i64>,
 }
 
-impl TryInto<AssetDescription> for LegacyAssetDescriptionV2 {
+impl TryInto<LegacyAssetDescriptionV3> for LegacyAssetDescriptionV2 {
     type Error = String;
 
-    fn try_into(self) -> Result<AssetDescription, Self::Error> {
-        Ok(AssetDescription {
+    fn try_into(self) -> Result<LegacyAssetDescriptionV3, Self::Error> {
+        Ok(LegacyAssetDescriptionV3 {
             name: self.name,
             creator: self.creator,
             image_filename: self.image_filename,

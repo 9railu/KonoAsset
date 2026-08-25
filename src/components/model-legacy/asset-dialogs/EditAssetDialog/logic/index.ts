@@ -58,6 +58,7 @@ const updateAvatar = async ({
       memo,
       dependencies,
       createdAt: 0, // unused on updating
+      registeredDeviceId: '', // unused on updating
       publishedAt,
     },
   }
@@ -91,6 +92,7 @@ const updateAvatarWearable = async ({
       memo,
       dependencies,
       createdAt: 0, // unused on updating
+      registeredDeviceId: '', // unused on updating
       publishedAt,
     },
     category,
@@ -125,6 +127,7 @@ const updateWorldObject = async ({
       memo,
       dependencies,
       createdAt: 0, // unused on updating
+      registeredDeviceId: '', // unused on updating
       publishedAt,
     },
     category,
@@ -158,6 +161,7 @@ const updateOtherAsset = async ({
       memo,
       dependencies,
       createdAt: 0, // unused on updating
+      registeredDeviceId: '', // unused on updating
       publishedAt,
     },
     category,

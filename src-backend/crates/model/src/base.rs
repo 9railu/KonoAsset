@@ -55,6 +55,10 @@ pub struct AssetDescription {
     pub dependencies: Vec<Uuid>,
     pub created_at: i64,
     pub published_at: Option<i64>,
+
+    // このアセットを登録したデバイスの device_id。クラウド同期環境で
+    // 「どの PC が追加したか」を絞り込むために使う。
+    pub registered_device_id: Uuid,
 }
 
 impl Avatar {

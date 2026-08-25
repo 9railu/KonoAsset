@@ -121,7 +121,7 @@ mod tests {
         .await
         .unwrap();
 
-        let mut provider = AssetStorage::create(dest).unwrap();
+        let mut provider = AssetStorage::create(dest, Uuid::new_v4()).unwrap();
         provider.load_all_assets_from_files().await.unwrap();
 
         assert_eq!(provider.get_avatar_store().get_all().await.len(), 1);

@@ -1,0 +1,1 @@
+export { AssetCardAvailabilityBadge } from './AssetCardAvailabilityBadge'

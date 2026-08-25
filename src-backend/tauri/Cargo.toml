@@ -53,3 +53,6 @@ tauri-plugin-deep-link.workspace = true
 tauri-plugin-single-instance.workspace = true
 tauri-plugin-updater.workspace = true
 tauri-plugin-window-state.workspace = true
+
+[target.'cfg(windows)'.dependencies]
+windows = { version = "0.56", features = ["Win32_Storage_FileSystem", "Win32_Foundation"] }

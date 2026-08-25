@@ -22,6 +22,14 @@ async getSortedAssetSummaries(sortBy: SortBy) : Promise<Result<AssetSummary[], s
     else return { status: "error", error: e  as any };
 }
 },
+async refreshAssetsFromDisk() : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("refresh_assets_from_disk") };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
 async getAssetDisplaysByBoothId(boothItemId: number) : Promise<Result<AssetSummary[], string>> {
     try {
     return { status: "ok", data: await TAURI_INVOKE("get_asset_displays_by_booth_id", { boothItemId }) };
@@ -81,6 +89,22 @@ async updateAsset(payload: AssetUpdatePayload) : Promise<Result<boolean, string>
 async getFilteredAssetIds(request: FilterRequest) : Promise<Result<string[], string>> {
     try {
     return { status: "ok", data: await TAURI_INVOKE("get_filtered_asset_ids", { request }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async getRegisteredDeviceNames() : Promise<Result<DeviceInfo[], string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("get_registered_device_names") };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async getAssetAvailabilityStatuses(ids: string[]) : Promise<Result<Partial<{ [key in string]: CloudAvailabilityStatus }>, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("get_asset_availability_statuses", { ids }) };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
@@ -511,7 +535,7 @@ updateProgress: "update-progress"
 
 export type AddAssetDeepLink = { path: string[]; boothItemId: number | null }
 export type AppState = { sort?: SortState; displayStyle: DisplayStyle }
-export type AssetDescription = { name: string; creator: string; imageFilename: string | null; tags: string[]; memo: string | null; boothItemId: number | null; dependencies: string[]; createdAt: number; publishedAt: number | null }
+export type AssetDescription = { name: string; creator: string; imageFilename: string | null; tags: string[]; memo: string | null; boothItemId: number | null; dependencies: string[]; createdAt: number; publishedAt: number | null; registeredDeviceId: string }
 export type AssetImportRequest<T> = { preAsset: T; absolutePaths: string[]; deleteSource: boolean }
 export type AssetRegistrationStatistics = { date: string; avatars: number; avatarWearables: number; worldObjects: number; otherAssets: number }
 export type AssetSummary = { id: string; assetType: AssetType; name: string; creator: string; imageFilename: string | null; hasMemo: boolean; dependencies: string[]; boothItemId: number | null; publishedAt: number | null }
@@ -523,13 +547,15 @@ export type AssetVolumeStatistics = { id: string; assetType: AssetType; name: st
 export type Avatar = { id: string; description: AssetDescription }
 export type AvatarWearable = { id: string; description: AssetDescription; category: string; supportedAvatars: string[] }
 export type BoothAssetInfo = { id: number; name: string; creator: string; imageUrls: string[]; publishedAt: number; estimatedAssetType: AssetType | null }
+export type CloudAvailabilityStatus = "notDownloaded" | "partiallyAvailable" | "fullyAvailable"
 export type CustomLanguageFileLoadResult = { data: LocalizationData; missing_keys: string[]; additional_keys: string[] }
+export type DeviceInfo = { id: string; name: string }
 export type DisplayStyle = "GridSmall" | "GridMedium" | "GridLarge" | "List"
 export type DryOrActual = "dryRun" | "actualRun"
 export type EntryType = "directory" | "file"
 export type FileInfo = { fileName: string; absolutePath: string }
 export type FilterElement<T> = { type: "AND"; data: T[] } | { type: "OR"; data: T[] } | { type: "Unlabeled" }
-export type FilterRequest = { assetType: AssetType | null; queryText: string | null; categories: FilterElement<FilterRequirement<string>> | null; tags: FilterElement<FilterRequirement<string>> | null; supportedAvatars: FilterElement<FilterRequirement<string>> | null }
+export type FilterRequest = { assetType: AssetType | null; queryText: string | null; categories: FilterElement<FilterRequirement<string>> | null; tags: FilterElement<FilterRequirement<string>> | null; supportedAvatars: FilterElement<FilterRequirement<string>> | null; registeredDeviceIds: string[] | null }
 export type FilterRequirement<T> = { type: "Include"; data: T } | { type: "Exclude"; data: T }
 export type GetAssetResult = { assetType: AssetType; avatar: Avatar | null; avatarWearable: AvatarWearable | null; worldObject: WorldObject | null; otherAsset: OtherAsset | null }
 export type ImageOptimizationResult = { resized: number; deleted: number }
@@ -544,7 +570,7 @@ export type PreAvatar = { description: AssetDescription }
 export type PreAvatarWearable = { description: AssetDescription; category: string; supportedAvatars: string[] }
 export type PreOtherAsset = { description: AssetDescription; category: string }
 export type PreWorldObject = { description: AssetDescription; category: string }
-export type PreferenceStore = { dataDirPath: string; theme: Theme; language: LanguageCode; deleteOnImport: boolean; zipExtraction: boolean; useUnitypackageSelectedOpen: boolean; useTrashBin: boolean; updateChannel: UpdateChannel }
+export type PreferenceStore = { dataDirPath: string; theme: Theme; language: LanguageCode; deleteOnImport: boolean; zipExtraction: boolean; useUnitypackageSelectedOpen: boolean; useTrashBin: boolean; updateChannel: UpdateChannel; deviceId: string; deviceName: string; autoRefreshIntervalSeconds: number }
 export type PrioritizedEntry = { priority: number; value: string }
 export type ProgressEvent = { percentage: number; filename: string }
 export type ResetApplicationRequest = { resetPreferences: boolean; deleteMetadata: boolean; deleteAssetData: boolean }

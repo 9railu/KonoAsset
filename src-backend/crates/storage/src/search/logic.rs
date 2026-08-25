@@ -54,6 +54,13 @@ fn filter_items<'a>(items: &'a [FilterOptimizedAssets], req: &FilterRequest) -> 
             return;
         }
 
+        // 登録デバイスの検査
+        if let Some(device_ids) = &req.registered_device_ids
+            && !device_ids.contains(&item.description.registered_device_id)
+        {
+            return;
+        }
+
         // カテゴリの検査
         if let Some(category) = &req.categories {
             // カテゴリが実装されていない場合は除外
@@ -338,6 +345,7 @@ mod tests {
             dependencies: vec![],
             created_at: chrono::Local::now().timestamp_millis(),
             published_at: Some(chrono::Local::now().timestamp_millis()),
+            registered_device_id: Uuid::new_v4(),
         };
 
         assert_eq!(check_text_contains(&description, &vec!["アセット"]), true);
@@ -395,6 +403,7 @@ mod tests {
             dependencies: vec![],
             created_at: chrono::Local::now().timestamp_millis(),
             published_at: Some(chrono::Local::now().timestamp_millis()),
+            registered_device_id: Uuid::new_v4(),
         };
 
         // Basic NOT search

@@ -8,7 +8,7 @@ use uuid::Uuid;
 
 use crate::{
     definitions::import_request::{
-        AssetImportRequest, PreAvatar, PreAvatarWearable, PreOtherAsset, PreWorldObject,
+        AssetImportRequest, PreAsset, PreAvatar, PreAvatarWearable, PreOtherAsset, PreWorldObject,
     },
     importer::import_wrapper::{
         import_avatar, import_avatar_wearable, import_other_asset, import_world_object,
@@ -22,7 +22,7 @@ pub async fn request_avatar_import(
     task_container: State<'_, Arc<Mutex<TaskContainer>>>,
     preference: State<'_, Arc<Mutex<PreferenceStore>>>,
     handle: State<'_, AppHandle>,
-    request: AssetImportRequest<PreAvatar>,
+    mut request: AssetImportRequest<PreAvatar>,
 ) -> Result<Uuid, String> {
     log::info!("Importing avatar from: {:?}", request.absolute_paths);
     log::debug!("Importing avatar: {:?}", request);
@@ -32,6 +32,7 @@ pub async fn request_avatar_import(
 
     let (zip_extraction, use_trash_bin) = {
         let preference = preference.lock().await;
+        request.pre_asset.description().registered_device_id = preference.device_id;
         (preference.zip_extraction, preference.use_trash_bin)
     };
 
@@ -66,7 +67,7 @@ pub async fn request_avatar_wearable_import(
     task_container: State<'_, Arc<Mutex<TaskContainer>>>,
     preference: State<'_, Arc<Mutex<PreferenceStore>>>,
     handle: State<'_, AppHandle>,
-    request: AssetImportRequest<PreAvatarWearable>,
+    mut request: AssetImportRequest<PreAvatarWearable>,
 ) -> Result<Uuid, String> {
     log::info!(
         "Importing avatar wearable from: {:?}",
@@ -79,6 +80,7 @@ pub async fn request_avatar_wearable_import(
 
     let (zip_extraction, use_trash_bin) = {
         let preference = preference.lock().await;
+        request.pre_asset.description().registered_device_id = preference.device_id;
         (preference.zip_extraction, preference.use_trash_bin)
     };
 
@@ -115,7 +117,7 @@ pub async fn request_world_object_import(
     task_container: State<'_, Arc<Mutex<TaskContainer>>>,
     preference: State<'_, Arc<Mutex<PreferenceStore>>>,
     handle: State<'_, AppHandle>,
-    request: AssetImportRequest<PreWorldObject>,
+    mut request: AssetImportRequest<PreWorldObject>,
 ) -> Result<Uuid, String> {
     log::info!("Importing world object from: {:?}", request.absolute_paths);
     log::debug!("Importing world object: {:?}", request);
@@ -125,6 +127,7 @@ pub async fn request_world_object_import(
 
     let (zip_extraction, use_trash_bin) = {
         let preference = preference.lock().await;
+        request.pre_asset.description().registered_device_id = preference.device_id;
         (preference.zip_extraction, preference.use_trash_bin)
     };
 
@@ -158,7 +161,7 @@ pub async fn request_other_asset_import(
     task_container: State<'_, Arc<Mutex<TaskContainer>>>,
     preference: State<'_, Arc<Mutex<PreferenceStore>>>,
     handle: State<'_, AppHandle>,
-    request: AssetImportRequest<PreOtherAsset>,
+    mut request: AssetImportRequest<PreOtherAsset>,
 ) -> Result<Uuid, String> {
     log::info!("Importing other asset from: {:?}", request.absolute_paths);
     log::debug!("Importing other asset: {:?}", request);
@@ -168,6 +171,7 @@ pub async fn request_other_asset_import(
 
     let (zip_extraction, use_trash_bin) = {
         let preference = preference.lock().await;
+        request.pre_asset.description().registered_device_id = preference.device_id;
         (preference.zip_extraction, preference.use_trash_bin)
     };
 

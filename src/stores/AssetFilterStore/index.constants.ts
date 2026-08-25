@@ -20,4 +20,5 @@ export const DEFAULT_FILTERS: AssetFilters = {
     type: 'OR',
     filters: [],
   },
+  registeredDeviceIds: [],
 }

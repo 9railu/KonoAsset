@@ -15,6 +15,7 @@ pub fn generate_tauri_specta_builder() -> Builder<tauri::Wry> {
         // アセット関連
         asset::get::get_asset,
         asset::get::get_sorted_asset_summaries,
+        asset::get::refresh_assets_from_disk,
         asset::get::get_asset_displays_by_booth_id,
         asset::create::request_avatar_import,
         asset::create::request_avatar_wearable_import,
@@ -23,6 +24,8 @@ pub fn generate_tauri_specta_builder() -> Builder<tauri::Wry> {
         asset::delete::request_asset_deletion,
         asset::update::update_asset,
         asset::filter::get_filtered_asset_ids,
+        asset::filter::get_registered_device_names,
+        asset::availability::get_asset_availability_statuses,
         asset::status::get_load_status,
         asset::adapter::import_from_other_data_store,
         asset::adapter::export_as_konoasset_zip,

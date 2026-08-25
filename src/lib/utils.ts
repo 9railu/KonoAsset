@@ -49,5 +49,8 @@ export const getDefaultPreferences = (): PreferenceStore => {
     useTrashBin: true,
     updateChannel: 'Stable',
     language: 'en-US',
+    deviceId: '',
+    deviceName: '',
+    autoRefreshIntervalSeconds: 0,
   }
 }

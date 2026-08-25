@@ -23,6 +23,8 @@
     "general:show-all": "すべて表示",
 
     "general:typeavatar": "アバター素体",
+    "asset-card:availability:not-downloaded": "クラウド上にのみ存在し、ローカルに未取得です",
+    "asset-card:availability:partially-available": "クラウド同期が完了していないファイルが含まれています",
     "general:typeavatar-multiple": "アバター素体",
     "general:typeavatarwearable": "アバター関連アセット",
     "general:typeavatarwearable-multiple": "アバター関連アセット",
@@ -149,6 +151,7 @@
     "mainnavbar:total-asset-count:foretext": "",
     "mainnavbar:total-asset-count:posttext": "個のアセットのうち",
     "mainnavbar:showing": "を表示中",
+    "mainnavbar:refresh": "更新",
     "mainnavbar:sort-settings:title": "表示順",
     "mainnavbar:sort-settings:created-at-desc": "追加順 (新しいものから)",
     "mainnavbar:sort-settings:created-at-asc": "追加順 (古いものから)",
@@ -179,6 +182,8 @@
     "mainsidebar:asset-type": "アセットタイプ",
     "mainsidebar:filter:category:placeholder": "カテゴリを選択...",
     "mainsidebar:filter:tag:placeholder": "タグを選択...",
+    "mainsidebar:filter:device": "登録デバイス",
+    "mainsidebar:filter:device:placeholder": "デバイスを選択...",
     "mainsidebar:help:word-exclude-feature-tips": "先頭に-を付けると除外検索できます！",
     "mainsidebar:help:attribute-exclude-feature-tips": "先頭に-を付けると除外検索できます！",
 
@@ -335,6 +340,17 @@
 
     "preference:settings:use-trash-bin-selector": "ゴミ箱を使用する",
     "preference:settings:use-trash-bin-selector:explanation-text": "この設定が有効の場合、ファイルを削除するときにゴミ箱に移動されるようになります",
+
+    "preference:settings:device-name-input": "デバイス名",
+    "preference:settings:device-name-input:explanation-text": "クラウド同期環境で、このPCが登録したアセットを識別するための名前です",
+
+    "preference:settings:auto-refresh-interval": "自動更新の間隔",
+    "preference:settings:auto-refresh-interval:explanation-text": "クラウド同期フォルダ上の変更を、指定した間隔で自動的に取り込みます",
+    "preference:settings:auto-refresh-interval:off": "オフ",
+    "preference:settings:auto-refresh-interval:30-seconds": "30秒ごと",
+    "preference:settings:auto-refresh-interval:1-minute": "1分ごと",
+    "preference:settings:auto-refresh-interval:5-minutes": "5分ごと",
+    "preference:settings:auto-refresh-interval:15-minutes": "15分ごと",
 
     "top:new-update-toast": "新しいアップデートがあります！",
     "top:new-update-toast:description": "アップデートにはバグ修正、機能追加などが含まれます",

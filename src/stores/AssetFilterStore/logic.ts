@@ -36,7 +36,8 @@ const isFilterEnforced = (filters: AssetFilters) => {
     filters.tag.type === 'Unlabeled' ||
     filters.tag.filters.length > 0 ||
     filters.supportedAvatar.type === 'Unlabeled' ||
-    filters.supportedAvatar.filters.length > 0
+    filters.supportedAvatar.filters.length > 0 ||
+    filters.registeredDeviceIds.length > 0
   )
 }
 
@@ -161,6 +162,10 @@ const createFilterRequest = (filters: AssetFilters): FilterRequest => {
     categories: requestCategories,
     tags: requestTags,
     supportedAvatars: requestSupportedAvatars,
+    registeredDeviceIds:
+      filters.registeredDeviceIds.length > 0
+        ? filters.registeredDeviceIds
+        : null,
   }
 
   return filterReq

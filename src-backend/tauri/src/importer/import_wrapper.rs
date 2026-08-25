@@ -298,7 +298,8 @@ mod tests {
             std::fs::remove_dir_all(test_root_dir).unwrap();
         }
 
-        let provider = AssetStorage::create(&data_dir).unwrap();
+        let device_id = Uuid::new_v4();
+        let provider = AssetStorage::create(&data_dir, device_id).unwrap();
 
         std::fs::create_dir_all(format!("{data_dir}/images")).unwrap();
         std::fs::write(format!("{data_dir}/images/temp_image.png"), b"").unwrap();
@@ -313,6 +314,7 @@ mod tests {
             dependencies: vec![],
             created_at: 123456,
             published_at: Some(123456),
+            registered_device_id: Uuid::new_v4(),
         };
 
         let pre_avatar = PreAvatar {
@@ -365,7 +367,10 @@ mod tests {
         assert!(std::fs::exists(&dummy_file_path).unwrap());
         assert_eq!(std::fs::read_to_string(&dummy_file_path).unwrap(), "dummy");
 
-        let avatar_json_path = format!("{data_dir}/metadata/{}", Avatar::filename());
+        let avatar_json_path = format!(
+            "{data_dir}/metadata/{}",
+            Avatar::device_filename(device_id)
+        );
         assert!(std::fs::exists(avatar_json_path).unwrap());
 
         let registered_avatar = provider

@@ -154,7 +154,9 @@ where
         ));
     }
 
-    let mut provider = AssetStorage::create(&path.to_path_buf())?;
+    // インポート元のディレクトリを読み取るためだけの一時的なコンテナなので、
+    // device_id は書き込みに使われることのないダミー値でよい。
+    let mut provider = AssetStorage::create(&path.to_path_buf(), Uuid::new_v4())?;
     provider.load_all_assets_from_files().await?;
 
     Ok(provider)
@@ -175,16 +177,37 @@ where
 
     let metadata_dir = path.join("metadata");
 
-    let avatar_file = metadata_dir.join(Avatar::filename());
-    let avatar_wearable_file = metadata_dir.join(AvatarWearable::filename());
-    let world_object_file = metadata_dir.join(WorldObject::filename());
-    let other_asset_file = metadata_dir.join(OtherAsset::filename());
+    // 固定名の旧ファイル（例: avatars.json）、または per-device ファイル
+    // （例: avatars__<uuid>.json）のいずれかが1つでもあれば有効なデータストアとみなす。
+    let has_any_metadata_file = |filename: String, prefix: String| -> bool {
+        if metadata_dir.join(&filename).exists() {
+            return true;
+        }
 
-    if !avatar_file.exists()
-        && !avatar_wearable_file.exists()
-        && !world_object_file.exists()
-        && !other_asset_file.exists()
-    {
+        let device_prefix = format!("{}__", prefix);
+
+        std::fs::read_dir(&metadata_dir)
+            .map(|entries| {
+                entries.filter_map(|entry| entry.ok()).any(|entry| {
+                    entry
+                        .file_name()
+                        .to_str()
+                        .map(|name| name.starts_with(&device_prefix) && name.ends_with(".json"))
+                        .unwrap_or(false)
+                })
+            })
+            .unwrap_or(false)
+    };
+
+    let has_avatar = has_any_metadata_file(Avatar::filename(), Avatar::filename_prefix());
+    let has_avatar_wearable =
+        has_any_metadata_file(AvatarWearable::filename(), AvatarWearable::filename_prefix());
+    let has_world_object =
+        has_any_metadata_file(WorldObject::filename(), WorldObject::filename_prefix());
+    let has_other_asset =
+        has_any_metadata_file(OtherAsset::filename(), OtherAsset::filename_prefix());
+
+    if !has_avatar && !has_avatar_wearable && !has_world_object && !has_other_asset {
         return Err(format!(
             "Invalid data store directory. Missing metadata files: {}",
             metadata_dir.display()
@@ -241,7 +264,7 @@ mod tests {
         .await
         .unwrap();
 
-        let mut provider = AssetStorage::create(dest).unwrap();
+        let mut provider = AssetStorage::create(dest, Uuid::new_v4()).unwrap();
         provider.load_all_assets_from_files().await.unwrap();
 
         assert_eq!(provider.get_avatar_store().get_all().await.len(), 1);

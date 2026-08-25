@@ -274,7 +274,7 @@ mod tests {
         let app_dir = setup_test_dir("test/temp/delete_asset_from_store").await;
 
         // Create a test storage
-        let storage = AssetStorage::create(&app_dir).unwrap();
+        let storage = AssetStorage::create(&app_dir, Uuid::new_v4()).unwrap();
         let store = storage.get_avatar_store();
 
         // Create a test asset with an image
@@ -294,6 +294,7 @@ mod tests {
                 dependencies: vec![],
                 created_at: 1234567890000,
                 published_at: None,
+                registered_device_id: Uuid::new_v4(),
             },
         };
 

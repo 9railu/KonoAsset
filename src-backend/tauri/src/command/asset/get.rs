@@ -7,6 +7,17 @@ use uuid::Uuid;
 
 use crate::definitions::results::GetAssetResult;
 
+// クラウド同期フォルダ上で他デバイスが追加・変更したアセットを取り込むため、
+// ディスク上の metadata ファイルを読み直して in-memory の一覧を更新する。
+#[tauri::command]
+#[specta::specta]
+pub async fn refresh_assets_from_disk(
+    basic_store: State<'_, Arc<Mutex<AssetStorage>>>,
+) -> Result<(), String> {
+    let mut basic_store = basic_store.lock().await;
+    basic_store.load_all_assets_from_files().await
+}
+
 #[tauri::command]
 #[specta::specta]
 pub async fn get_asset(

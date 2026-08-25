@@ -1992,6 +1992,17 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7f24254aa9a54b5c858eaee2f5bccdb46aaf0e486a595ed5fd8f86ba55232a70"
 
 [[package]]
+name = "hostname"
+version = "0.4.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "617aaa3557aef3810a6369d0a99fac8a080891b68bd9f9812a1eeda0c0730cbd"
+dependencies = [
+ "cfg-if",
+ "libc",
+ "windows-link 0.2.1",
+]
+
+[[package]]
 name = "html5ever"
 version = "0.38.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2621,6 +2632,7 @@ dependencies = [
  "tauri-specta",
  "tokio",
  "uuid",
+ "windows 0.56.0",
  "zip 0.0.0",
 ]
 
@@ -2757,6 +2769,7 @@ checksum = "47d9d19d1d6efa0109d2f65ff4c85cddd50bd572e5a00127ab10987290bcefae"
 name = "loader"
 version = "0.0.0"
 dependencies = [
+ "file",
  "log",
  "model",
  "monostate",
@@ -2897,6 +2910,7 @@ dependencies = [
 name = "model"
 version = "0.0.0"
 dependencies = [
+ "hostname",
  "serde",
  "specta",
  "sys-locale",

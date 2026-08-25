@@ -43,9 +43,11 @@ pub async fn set_preferences(
     }
 
     preference.overwrite(&new_preference);
-    loader::wrapper::save_preference_store(&preference).map_err(|e| {
-        let err = format!("Failed to save preferences: {}", e);
-        log::error!("{}", err);
-        err
-    })
+    loader::wrapper::save_preference_store(&preference)
+        .await
+        .map_err(|e| {
+            let err = format!("Failed to save preferences: {}", e);
+            log::error!("{}", err);
+            err
+        })
 }

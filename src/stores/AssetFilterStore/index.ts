@@ -24,6 +24,7 @@ export type AssetFilters = {
     type: MatchType
     filters: string[]
   }
+  registeredDeviceIds: string[]
 }
 
 type RecursivePartial<T> = {
@@ -74,6 +75,9 @@ export const useAssetFilterStore = create<Props>((set, get) => ({
           ...currentFilters.supportedAvatar,
           ...filter.supportedAvatar,
         },
+      }),
+      ...(filter.registeredDeviceIds !== undefined && {
+        registeredDeviceIds: filter.registeredDeviceIds,
       }),
     }
 

@@ -4,17 +4,22 @@ import { Button } from '@/components/ui/button'
 import { useLocalization } from '@/hooks/use-localization'
 import { StatusBarOptionPopover } from '../../StatusBarOptionPopover'
 import { cn } from '@/lib/utils'
+import { RefreshCw } from 'lucide-react'
 
 type Props = {
   totalAssetCount: number
   filterAppliedAssetCount?: number
   clearFilters: () => void
+  onRefresh: () => void
+  isRefreshing: boolean
 }
 
 export const InternalStatusBar: FC<Props> = ({
   totalAssetCount,
   filterAppliedAssetCount,
   clearFilters,
+  onRefresh,
+  isRefreshing,
 }) => {
   const { t } = useLocalization()
 
@@ -51,7 +56,17 @@ export const InternalStatusBar: FC<Props> = ({
           </div>
         </Card>
       </div>
-      <div className="ml-2 flex items-center shrink-0">
+      <div className="ml-2 flex items-center shrink-0 gap-1">
+        <Button
+          className="h-8 w-8"
+          variant="secondary"
+          size="icon"
+          onClick={onRefresh}
+          disabled={isRefreshing}
+          title={t('mainnavbar:refresh')}
+        >
+          <RefreshCw className={cn('h-4 w-4', isRefreshing && 'animate-spin')} />
+        </Button>
         <StatusBarOptionPopover />
       </div>
     </div>

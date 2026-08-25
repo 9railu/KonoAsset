@@ -1,5 +1,6 @@
 use model::{AssetType, Avatar, AvatarWearable, OtherAsset, WorldObject};
 use serde::{Deserialize, Serialize};
+use uuid::Uuid;
 
 #[derive(Serialize, Deserialize, Debug, Clone, specta::Type)]
 #[serde(rename_all = "camelCase")]
@@ -24,6 +25,8 @@ pub struct FilterRequest {
     pub categories: Option<FilterElement<FilterRequirement<String>>>,
     pub tags: Option<FilterElement<FilterRequirement<String>>>,
     pub supported_avatars: Option<FilterElement<FilterRequirement<String>>>,
+    // 指定した場合、いずれかの device_id が登録したアセットのみを対象にする。
+    pub registered_device_ids: Option<Vec<Uuid>>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, specta::Type)]

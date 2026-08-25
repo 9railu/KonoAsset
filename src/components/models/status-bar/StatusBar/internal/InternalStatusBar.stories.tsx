@@ -13,11 +13,14 @@ const meta = {
     totalAssetCount: { control: 'number' },
     filterAppliedAssetCount: { control: 'number' },
     clearFilters: { action: 'clearFilters' },
+    isRefreshing: { control: 'boolean' },
   },
   args: {
     totalAssetCount: 1234,
     filterAppliedAssetCount: 123,
     clearFilters: fn(),
+    onRefresh: fn(),
+    isRefreshing: false,
   },
   decorators: [
     (Story) => (

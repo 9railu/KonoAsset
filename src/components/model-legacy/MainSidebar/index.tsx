@@ -19,6 +19,7 @@ import { useLocalization } from '@/hooks/use-localization'
 import { AllTypeFilter } from './layout/AllTypeFilter'
 import { useMainSidebar } from './hook'
 import { OtherAssetFilter } from './layout/OtherAssetFilter'
+import { DeviceFilter } from './layout/DeviceFilter'
 import { FC } from 'react'
 import { useShallow } from 'zustand/react/shallow'
 import { useAssetFilterStore } from '@/stores/AssetFilterStore'
@@ -94,6 +95,7 @@ export const MainSidebar: FC = () => {
                   inputProps={tagSelectorInputProps}
                 />
               </div>
+              <DeviceFilter />
             </SidebarGroupContent>
           </SidebarGroup>
         </ScrollArea>

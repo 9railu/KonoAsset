@@ -193,6 +193,28 @@ impl FileTransferGuard {
     }
 }
 
+// 同じディレクトリに一時ファイルを書いてから rename することで、書き込み中にクラウド同期
+// クライアントが不完全なファイルを拾ってしまうのを防ぐ（rename は同一ボリューム内であれば
+// アトミックに行われる）。前回のクラッシュ等で残った同名の一時ファイルは上書きして進める。
+pub async fn write_atomic<P>(path: P, bytes: &[u8]) -> Result<(), tokio::io::Error>
+where
+    P: AsRef<Path>,
+{
+    let path = path.as_ref();
+
+    let file_name = path.file_name().ok_or_else(|| {
+        tokio::io::Error::new(tokio::io::ErrorKind::InvalidInput, "Path has no file name")
+    })?;
+
+    let mut tmp_file_name = std::ffi::OsString::from(".tmp_");
+    tmp_file_name.push(file_name);
+
+    let tmp_path = path.with_file_name(tmp_file_name);
+
+    tokio::fs::write(&tmp_path, bytes).await?;
+    tokio::fs::rename(&tmp_path, path).await
+}
+
 pub async fn move_file_or_dir<P>(
     src: P,
     dest: P,

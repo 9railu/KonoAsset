@@ -1,6 +1,7 @@
 use std::path::{Path, PathBuf};
 
 use serde::{Deserialize, Serialize};
+use uuid::Uuid;
 
 #[derive(Serialize, Deserialize, Debug, Clone, Copy, PartialEq, Eq, specta::Type)]
 pub enum Theme {
@@ -79,6 +80,23 @@ pub struct PreferenceStore {
     pub use_trash_bin: bool,
 
     pub update_channel: UpdateChannel,
+
+    // クラウド同期環境でこのインストールを識別するための情報。
+    // device_id は初回起動時に生成されたら変わらない値で、per-device のメタデータファイル名や
+    // アセットの registered_device_id に使われる。device_name はユーザーに見せる表示名。
+    pub device_id: Uuid,
+    pub device_name: String,
+
+    // 0 の場合は自動更新を無効化する
+    pub auto_refresh_interval_seconds: u32,
+}
+
+pub fn default_device_name() -> String {
+    hostname::get()
+        .ok()
+        .and_then(|name| name.into_string().ok())
+        .filter(|name| !name.is_empty())
+        .unwrap_or_else(|| "Unknown Device".to_string())
 }
 
 impl PreferenceStore {
@@ -109,6 +127,11 @@ impl PreferenceStore {
             use_trash_bin: true,
 
             update_channel: UpdateChannel::Stable,
+
+            device_id: Uuid::new_v4(),
+            device_name: default_device_name(),
+
+            auto_refresh_interval_seconds: 0,
         }
     }
 
@@ -128,6 +151,9 @@ impl PreferenceStore {
         self.use_unitypackage_selected_open = other.use_unitypackage_selected_open;
         self.use_trash_bin = other.use_trash_bin;
         self.update_channel = other.update_channel;
+        self.auto_refresh_interval_seconds = other.auto_refresh_interval_seconds;
+
+        // device_id / device_name は端末固有の情報なので other 側の値では上書きしない。
 
         // If the new language is user-provided, skip updating the language field to prevent corruption.
         if let LanguageCode::UserProvided(_) = other.language {

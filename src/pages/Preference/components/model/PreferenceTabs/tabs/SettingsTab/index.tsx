@@ -17,6 +17,8 @@ import { LocalizationContext } from '@/components/context/LocalizationContext'
 import { ZipExtractionToggle } from '@/components/model-legacy/preference/ZipExtractionToggle'
 import { ThumbnailOptimizer } from '@/components/models/thumbnail-optimizer/ThumbnailOptimizer'
 import { UseTrashBinSelectorToggle } from '@/components/model-legacy/preference/UseTrashBinSelectorToggle'
+import { DeviceNameInput } from '@/components/model-legacy/preference/DeviceNameInput'
+import { AutoRefreshIntervalSelector } from '@/components/model-legacy/preference/AutoRefreshIntervalSelector'
 
 type Props = {
   id: PreferenceTabIDs
@@ -95,6 +97,21 @@ export const SettingsTab: FC<Props> = ({ id }) => {
           enable={preference.useTrashBin}
           setEnable={async (enable: boolean) => {
             await setPreference({ ...preference, useTrashBin: enable }, true)
+          }}
+        />
+        <DeviceNameInput
+          deviceName={preference.deviceName}
+          setDeviceName={async (deviceName: string) => {
+            await setPreference({ ...preference, deviceName }, true)
+          }}
+        />
+        <AutoRefreshIntervalSelector
+          intervalSeconds={preference.autoRefreshIntervalSeconds}
+          setIntervalSeconds={async (autoRefreshIntervalSeconds: number) => {
+            await setPreference(
+              { ...preference, autoRefreshIntervalSeconds },
+              true,
+            )
           }}
         />
         <Separator />

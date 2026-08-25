@@ -23,6 +23,8 @@
     "general:show-all": "Show all",
 
     "general:typeavatar": "Avatar",
+    "asset-card:availability:not-downloaded": "This asset only exists in the cloud and hasn't been downloaded locally",
+    "asset-card:availability:partially-available": "Some files haven't finished syncing from the cloud",
     "general:typeavatar-multiple": "Avatars",
     "general:typeavatarwearable": "Avatar-related asset",
     "general:typeavatarwearable-multiple": "Avatar-related assets",
@@ -149,6 +151,7 @@
     "mainnavbar:total-asset-count:foretext": "Out of ",
     "mainnavbar:total-asset-count:posttext": " assets,",
     "mainnavbar:showing": "currently displayed",
+    "mainnavbar:refresh": "Refresh",
     "mainnavbar:sort-settings:title": "Sort by",
     "mainnavbar:sort-settings:created-at-desc": "Date added (newest first)",
     "mainnavbar:sort-settings:created-at-asc": "Date added (oldest first)",
@@ -179,6 +182,8 @@
     "mainsidebar:asset-type": "Asset type",
     "mainsidebar:filter:category:placeholder": "Select categories...",
     "mainsidebar:filter:tag:placeholder": "Select tags...",
+    "mainsidebar:filter:device": "Registered device",
+    "mainsidebar:filter:device:placeholder": "Select devices...",
     "mainsidebar:help:word-exclude-feature-tips": "You can exclude specific words from search by prefixing them with a '-'!",
     "mainsidebar:help:attribute-exclude-feature-tips": "You can exclude attributes from search by prefixing them with a '-'!",
 
@@ -322,6 +327,17 @@
 
     "preference:settings:use-trash-bin-selector": "Use Recycle Bin",
     "preference:settings:use-trash-bin-selector:explanation-text": "If this setting is enabled, files will be moved to the Recycle Bin when deleted",
+
+    "preference:settings:device-name-input": "Device name",
+    "preference:settings:device-name-input:explanation-text": "Used in a cloud-synced environment to identify which PC registered an asset",
+
+    "preference:settings:auto-refresh-interval": "Auto refresh interval",
+    "preference:settings:auto-refresh-interval:explanation-text": "Automatically picks up changes made in the cloud-synced folder at the specified interval",
+    "preference:settings:auto-refresh-interval:off": "Off",
+    "preference:settings:auto-refresh-interval:30-seconds": "Every 30 seconds",
+    "preference:settings:auto-refresh-interval:1-minute": "Every 1 minute",
+    "preference:settings:auto-refresh-interval:5-minutes": "Every 5 minutes",
+    "preference:settings:auto-refresh-interval:15-minutes": "Every 15 minutes",
 
     "preference:thumbnail-optimizer:optimize": "Optimize thumbnail images",
     "preference:thumbnail-optimizer:optimize:description": "Resize excessively large thumbnail images and delete unnecessary files to save disk space",

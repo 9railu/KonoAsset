@@ -14,6 +14,9 @@ const mockPreference: PreferenceStore = {
   useTrashBin: true,
   updateChannel: 'Stable',
   language: 'en-US',
+  deviceId: 'test-device-id',
+  deviceName: 'Test Device',
+  autoRefreshIntervalSeconds: 0,
 }
 
 vi.mock('../logic', () => {

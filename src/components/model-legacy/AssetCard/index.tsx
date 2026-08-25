@@ -11,6 +11,8 @@ import { AssetCardTypeBadge } from '@/components/models/asset-card/AssetCardType
 import { useMemoDialogStore } from '@/stores/dialogs/MemoDialogStore'
 import { AssetCardMeatballMenu } from '@/components/models/asset-card/AssetCardMeatballMenu'
 import { SquareImage } from '@/components/models/square-image/SquareImage'
+import { AssetCardAvailabilityBadge } from '@/components/models/asset-card/AssetCardAvailabilityBadge'
+import { useAssetAvailabilityStore } from '@/stores/AssetAvailabilityStore'
 
 type Props = {
   asset: AssetSummary
@@ -23,6 +25,9 @@ export const AssetCard = ({ asset, ref, openEditAssetDialog }: Props) => {
   const displayStyle = useAssetSummaryViewStore((state) => state.displayStyle)
 
   const openMemoDialog = useMemoDialogStore((state) => state.open)
+  const availabilityStatus = useAssetAvailabilityStore(
+    (state) => state.statuses[asset.id],
+  )
 
   const onShopNameClicked = useCallback(() => {
     updateFilter({
@@ -46,6 +51,7 @@ export const AssetCard = ({ asset, ref, openEditAssetDialog }: Props) => {
               type={asset.assetType}
               onClick={() => updateFilter({ assetType: asset.assetType })}
             />
+            <AssetCardAvailabilityBadge status={availabilityStatus} />
             {asset.hasMemo && (
               <Button
                 variant="outline"

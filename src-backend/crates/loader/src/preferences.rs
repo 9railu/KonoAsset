@@ -3,13 +3,18 @@ use std::path::PathBuf;
 
 use monostate::MustBe;
 use serde::{Deserialize, Serialize};
+use uuid::Uuid;
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum VersionedPreferences {
     Preference {
-        version: MustBe!(6u64),
+        version: MustBe!(7u64),
         data: PreferenceStore,
+    },
+    LegacyPreferenceV6 {
+        version: MustBe!(6u64),
+        data: LegacyPreferenceStoreV6,
     },
     LegacyPreferenceV5 {
         version: MustBe!(5u64),
@@ -40,20 +45,27 @@ impl TryInto<PreferenceStore> for VersionedPreferences {
     fn try_into(self) -> Result<PreferenceStore, Self::Error> {
         match self {
             VersionedPreferences::Preference { data, .. } => Ok(data),
-            VersionedPreferences::LegacyPreferenceV5 { data, .. } => Ok(data.into()),
+            VersionedPreferences::LegacyPreferenceV6 { data, .. } => Ok(data.into()),
+            VersionedPreferences::LegacyPreferenceV5 { data, .. } => {
+                let data: LegacyPreferenceStoreV6 = data.into();
+                Ok(data.into())
+            }
             VersionedPreferences::LegacyPreferenceV4 { data, .. } => {
                 let data: LegacyPreferenceStoreV5 = data.into();
+                let data: LegacyPreferenceStoreV6 = data.into();
                 Ok(data.into())
             }
             VersionedPreferences::LegacyPreferenceV3 { data, .. } => {
                 let data: LegacyPreferenceStoreV4 = data.into();
                 let data: LegacyPreferenceStoreV5 = data.into();
+                let data: LegacyPreferenceStoreV6 = data.into();
                 Ok(data.into())
             }
             VersionedPreferences::LegacyPreferenceV2 { data, .. } => {
                 let data: LegacyPreferenceStoreV3 = data.into();
                 let data: LegacyPreferenceStoreV4 = data.into();
                 let data: LegacyPreferenceStoreV5 = data.into();
+                let data: LegacyPreferenceStoreV6 = data.into();
                 Ok(data.into())
             }
             VersionedPreferences::LegacyPreferenceV1 { data, .. } => {
@@ -61,6 +73,7 @@ impl TryInto<PreferenceStore> for VersionedPreferences {
                 let data: LegacyPreferenceStoreV3 = data.into();
                 let data: LegacyPreferenceStoreV4 = data.into();
                 let data: LegacyPreferenceStoreV5 = data.into();
+                let data: LegacyPreferenceStoreV6 = data.into();
                 Ok(data.into())
             }
             VersionedPreferences::LegacyRawPreference(legacy_raw_preference) => {
@@ -68,6 +81,7 @@ impl TryInto<PreferenceStore> for VersionedPreferences {
                 let data: LegacyPreferenceStoreV3 = data.into();
                 let data: LegacyPreferenceStoreV4 = data.into();
                 let data: LegacyPreferenceStoreV5 = data.into();
+                let data: LegacyPreferenceStoreV6 = data.into();
                 Ok(data.into())
             }
         }
@@ -79,9 +93,45 @@ impl TryFrom<PreferenceStore> for VersionedPreferences {
 
     fn try_from(value: PreferenceStore) -> Result<VersionedPreferences, Self::Error> {
         Ok(VersionedPreferences::Preference {
-            version: MustBe!(6u64),
+            version: MustBe!(7u64),
             data: value,
         })
+    }
+}
+
+/*
+ * Version 6
+ */
+
+#[derive(Serialize, Deserialize, Debug)]
+#[serde(rename_all = "camelCase")]
+pub struct LegacyPreferenceStoreV6 {
+    pub data_dir_path: PathBuf,
+    pub theme: Theme,
+    pub language: LanguageCode,
+    pub delete_on_import: bool,
+    pub zip_extraction: bool,
+    pub use_unitypackage_selected_open: bool,
+    pub use_trash_bin: bool,
+    pub update_channel: UpdateChannel,
+}
+
+impl Into<PreferenceStore> for LegacyPreferenceStoreV6 {
+    fn into(self) -> PreferenceStore {
+        PreferenceStore {
+            file_path: Default::default(),
+            data_dir_path: self.data_dir_path,
+            theme: self.theme,
+            language: self.language,
+            delete_on_import: self.delete_on_import,
+            zip_extraction: self.zip_extraction,
+            use_unitypackage_selected_open: self.use_unitypackage_selected_open,
+            use_trash_bin: self.use_trash_bin,
+            update_channel: self.update_channel,
+            device_id: Uuid::new_v4(),
+            device_name: model::preference::default_device_name(),
+            auto_refresh_interval_seconds: 0,
+        }
     }
 }
 
@@ -101,10 +151,9 @@ pub struct LegacyPreferenceStoreV5 {
     pub update_channel: UpdateChannel,
 }
 
-impl Into<PreferenceStore> for LegacyPreferenceStoreV5 {
-    fn into(self) -> PreferenceStore {
-        PreferenceStore {
-            file_path: Default::default(),
+impl Into<LegacyPreferenceStoreV6> for LegacyPreferenceStoreV5 {
+    fn into(self) -> LegacyPreferenceStoreV6 {
+        LegacyPreferenceStoreV6 {
             data_dir_path: self.data_dir_path,
             theme: self.theme,
             language: self.language,

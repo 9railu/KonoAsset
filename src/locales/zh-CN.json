@@ -23,6 +23,8 @@
     "general:show-all": "显示全部",
 
     "general:typeavatar": "虚拟形象",
+    "asset-card:availability:not-downloaded": "该资源仅存在于云端，尚未下载到本地",
+    "asset-card:availability:partially-available": "部分文件尚未完成云同步",
     "general:typeavatar-multiple": "虚拟形象",
     "general:typeavatarwearable": "虚拟形象相关",
     "general:typeavatarwearable-multiple": "虚拟形象相关",
@@ -149,6 +151,7 @@
     "mainnavbar:total-asset-count:foretext": "共 ",
     "mainnavbar:total-asset-count:posttext": " 项资产，",
     "mainnavbar:showing": "当前显示",
+    "mainnavbar:refresh": "刷新",
     "mainnavbar:sort-settings:title": "排序方式",
     "mainnavbar:sort-settings:created-at-desc": "添加日期（从新到旧）",
     "mainnavbar:sort-settings:created-at-asc": "添加日期（从旧到新）",
@@ -179,6 +182,8 @@
     "mainsidebar:asset-type": "资产类型",
     "mainsidebar:filter:category:placeholder": "选择分类...",
     "mainsidebar:filter:tag:placeholder": "选择标签...",
+    "mainsidebar:filter:device": "注册设备",
+    "mainsidebar:filter:device:placeholder": "选择设备...",
     "mainsidebar:help:word-exclude-feature-tips": "在文本前添加'-'可将其排除在搜索结果之外！",
     "mainsidebar:help:attribute-exclude-feature-tips": "在标签前添加'-'可将其排除在搜索结果之外！",
 
@@ -322,6 +327,17 @@
 
     "preference:settings:use-trash-bin-selector": "使用回收站",
     "preference:settings:use-trash-bin-selector:explanation-text": "启用后，删除的文件将被移至回收站",
+
+    "preference:settings:device-name-input": "设备名称",
+    "preference:settings:device-name-input:explanation-text": "在云同步环境中，用于标识是哪台电脑注册了该资源",
+
+    "preference:settings:auto-refresh-interval": "自动刷新间隔",
+    "preference:settings:auto-refresh-interval:explanation-text": "按指定间隔自动获取云同步文件夹中的更改",
+    "preference:settings:auto-refresh-interval:off": "关闭",
+    "preference:settings:auto-refresh-interval:30-seconds": "每30秒",
+    "preference:settings:auto-refresh-interval:1-minute": "每1分钟",
+    "preference:settings:auto-refresh-interval:5-minutes": "每5分钟",
+    "preference:settings:auto-refresh-interval:15-minutes": "每15分钟",
 
     "preference:thumbnail-optimizer:optimize": "优化缩略图",
     "preference:thumbnail-optimizer:optimize:description": "调整过大缩略图的尺寸并删除不必要的文件，以节省磁盘空间",

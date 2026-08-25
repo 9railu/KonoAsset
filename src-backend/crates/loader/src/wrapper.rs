@@ -41,10 +41,8 @@ where
     Ok(preference)
 }
 
-pub fn save_preference_store(preference: &PreferenceStore) -> Result<(), std::io::Error> {
+pub async fn save_preference_store(preference: &PreferenceStore) -> Result<(), std::io::Error> {
     let path = &preference.file_path;
-
-    let writer = std::fs::File::create(path)?;
 
     let versioned = VersionedPreferences::try_from(preference.clone());
 
@@ -53,7 +51,7 @@ pub fn save_preference_store(preference: &PreferenceStore) -> Result<(), std::io
         return Ok(());
     }
 
-    serde_json::to_writer(writer, &versioned.unwrap())?;
+    let bytes = serde_json::to_vec(&versioned.unwrap())?;
 
-    Ok(())
+    file::modify_guard::write_atomic(path, &bytes).await
 }

@@ -315,6 +315,7 @@ export const useAddAssetDialog = ({
           boothItemId: form.getValues('boothItemId') ?? null,
           createdAt: new Date().getTime(),
           publishedAt: form.getValues('publishedAt') ?? null,
+          registeredDeviceId: preference.deviceId,
         },
         category: form.getValues('category'),
         supportedAvatars: form.getValues('supportedAvatars'),

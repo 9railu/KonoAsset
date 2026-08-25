@@ -23,6 +23,7 @@ use super::json_asset_container::JsonAssetContainer;
 
 pub struct AssetStorage {
     data_dir: PathBuf,
+    device_id: Uuid,
 
     avatar_store: JsonAssetContainer<Avatar>,
     avatar_wearable_store: JsonAssetContainer<AvatarWearable>,
@@ -31,19 +32,21 @@ pub struct AssetStorage {
 }
 
 impl AssetStorage {
-    pub fn create<T: AsRef<Path>>(data_dir: T) -> Result<Self, String> {
+    pub fn create<T: AsRef<Path>>(data_dir: T, device_id: Uuid) -> Result<Self, String> {
         let data_dir = data_dir.as_ref().to_path_buf();
 
-        let avatar_store: JsonAssetContainer<Avatar> = JsonAssetContainer::create(&data_dir)?;
+        let avatar_store: JsonAssetContainer<Avatar> =
+            JsonAssetContainer::create(&data_dir, device_id)?;
         let avatar_wearable_store: JsonAssetContainer<AvatarWearable> =
-            JsonAssetContainer::create(&data_dir)?;
+            JsonAssetContainer::create(&data_dir, device_id)?;
         let world_object_store: JsonAssetContainer<WorldObject> =
-            JsonAssetContainer::create(&data_dir)?;
+            JsonAssetContainer::create(&data_dir, device_id)?;
         let other_asset_store: JsonAssetContainer<OtherAsset> =
-            JsonAssetContainer::create(&data_dir)?;
+            JsonAssetContainer::create(&data_dir, device_id)?;
 
         Ok(Self {
             data_dir,
+            device_id,
 
             avatar_store: avatar_store,
             avatar_wearable_store: avatar_wearable_store,
@@ -429,10 +432,10 @@ impl AssetStorage {
     {
         let new_path = new_path.as_ref().to_path_buf();
 
-        self.avatar_store = JsonAssetContainer::create(&new_path)?;
-        self.avatar_wearable_store = JsonAssetContainer::create(&new_path)?;
-        self.world_object_store = JsonAssetContainer::create(&new_path)?;
-        self.other_asset_store = JsonAssetContainer::create(&new_path)?;
+        self.avatar_store = JsonAssetContainer::create(&new_path, self.device_id)?;
+        self.avatar_wearable_store = JsonAssetContainer::create(&new_path, self.device_id)?;
+        self.world_object_store = JsonAssetContainer::create(&new_path, self.device_id)?;
+        self.other_asset_store = JsonAssetContainer::create(&new_path, self.device_id)?;
 
         self.data_dir = new_path;
 
@@ -468,12 +471,13 @@ impl AssetStorage {
             return Err("Failed to create backup directory".into());
         }
 
-        let files = vec![
-            Avatar::filename(),
-            AvatarWearable::filename(),
-            WorldObject::filename(),
-            OtherAsset::filename(),
-        ];
+        let files: Vec<String> = std::fs::read_dir(&metadata_path)
+            .map_err(|e| format!("Failed to read metadata dir: {:?}", e))?
+            .filter_map(|entry| entry.ok())
+            .filter(|entry| entry.path().is_file())
+            .filter_map(|entry| entry.file_name().to_str().map(|s| s.to_string()))
+            .filter(|name| name.ends_with(".json"))
+            .collect();
 
         for file in files {
             let path = metadata_path.join(&file);
@@ -749,7 +753,7 @@ mod tests {
         setup_dir(from_one, &target_one).await;
         setup_dir(from_two, &target_two).await;
 
-        let mut storage = AssetStorage::create(&target_one).unwrap();
+        let mut storage = AssetStorage::create(&target_one, Uuid::new_v4()).unwrap();
 
         storage.load_all_assets_from_files().await.unwrap();
 
@@ -761,7 +765,7 @@ mod tests {
         assert!(ids.contains(&Uuid::from_str("c155488e-53bf-4c98-92e5-e5c8f66a1667").unwrap()));
         assert!(ids.contains(&Uuid::from_str("b2003e9a-86c1-4ab6-9e6b-4388497e2226").unwrap()));
 
-        let mut external_storage = AssetStorage::create(&target_two).unwrap();
+        let mut external_storage = AssetStorage::create(&target_two, Uuid::new_v4()).unwrap();
         external_storage.load_all_assets_from_files().await.unwrap();
 
         let mut duplicate_ids = HashMap::new();
@@ -797,7 +801,7 @@ mod tests {
         setup_dir(from, current_path).await;
         std::fs::create_dir_all(new_path).unwrap();
 
-        let mut storage = AssetStorage::create(&current_path).unwrap();
+        let mut storage = AssetStorage::create(&current_path, Uuid::new_v4()).unwrap();
 
         storage.load_all_assets_from_files().await.unwrap();
 
@@ -862,7 +866,7 @@ mod tests {
         }
         std::fs::create_dir_all(test_dir).unwrap();
 
-        let mut storage = AssetStorage::create(test_dir).unwrap();
+        let mut storage = AssetStorage::create(test_dir, Uuid::new_v4()).unwrap();
         storage.load_all_assets_from_files().await.unwrap();
 
         // Test updating existing avatar
@@ -879,6 +883,7 @@ mod tests {
                 dependencies: vec![],
                 created_at: 1234567890000,
                 published_at: None,
+                registered_device_id: Uuid::new_v4(),
             },
         };
 
@@ -912,6 +917,7 @@ mod tests {
                 dependencies: vec![],
                 created_at: 1234567890000,
                 published_at: None,
+                registered_device_id: Uuid::new_v4(),
             },
             category: "TestCategory".into(),
             supported_avatars: BTreeSet::new(),
@@ -947,6 +953,7 @@ mod tests {
                 dependencies: vec![],
                 created_at: 1234567890000,
                 published_at: None,
+                registered_device_id: Uuid::new_v4(),
             },
             category: "TestCategory".into(),
         };
@@ -984,6 +991,7 @@ mod tests {
                 dependencies: vec![],
                 created_at: 1234567890000,
                 published_at: None,
+                registered_device_id: Uuid::new_v4(),
             },
             category: "TestCategory".into(),
         };
@@ -1022,6 +1030,7 @@ mod tests {
                 dependencies: vec![],
                 created_at: 1234567890000,
                 published_at: None,
+                registered_device_id: Uuid::new_v4(),
             },
         };
 

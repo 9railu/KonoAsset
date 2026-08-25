@@ -141,6 +141,7 @@ pub fn run() {
             };
 
             let data_dir = pref_store.get_data_dir().clone();
+            let device_id = pref_store.device_id;
             let update_channel = pref_store.update_channel.clone();
             let state_handler = StateHandler::load_or_default(state_file_path);
 
@@ -154,7 +155,8 @@ pub fn run() {
             )));
             app.manage(arc_mutex(state_handler));
 
-            let store_provider = match load_store_provider(&data_dir, &app_local_data_dir) {
+            let store_provider = match load_store_provider(&data_dir, device_id, &app_local_data_dir)
+            {
                 Ok(store_provider) => store_provider,
                 Err(err) => {
                     log::error!("{}", err);
@@ -226,9 +228,10 @@ fn load_preference_store(
 
 fn load_store_provider(
     data_dir: &PathBuf,
+    device_id: uuid::Uuid,
     app_local_dir: &PathBuf,
 ) -> Result<AssetStorage, String> {
-    let result = AssetStorage::create(data_dir);
+    let result = AssetStorage::create(data_dir, device_id);
 
     let mut store_provider = match result {
         Ok(store_provider) => store_provider,

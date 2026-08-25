@@ -59,6 +59,7 @@ export const useAssetSelector = ({ onSelected }: Props): ReturnProps => {
       queryText: searchInput,
       supportedAvatars: null,
       tags: null,
+      registeredDeviceIds: null,
     }
 
     const result = await commands.getFilteredAssetIds(req)

@@ -156,7 +156,7 @@ mod tests {
         .await
         .unwrap();
 
-        let mut store_provider = AssetStorage::create(&provider).unwrap();
+        let mut store_provider = AssetStorage::create(&provider, uuid::Uuid::new_v4()).unwrap();
         store_provider.load_all_assets_from_files().await.unwrap();
 
         let store_provider = Arc::new(Mutex::new(store_provider));

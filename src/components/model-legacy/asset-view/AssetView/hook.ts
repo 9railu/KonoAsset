@@ -3,6 +3,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { useAssetSummaryViewStore } from '@/stores/AssetSummaryViewStore'
 import { useShallow } from 'zustand/react/shallow'
 import { useAssetFilterStore } from '@/stores/AssetFilterStore'
+import { useAssetAvailabilityStore } from '@/stores/AssetAvailabilityStore'
 
 type Props = {
   setShowingAssetCount: (count: number) => void
@@ -59,6 +60,17 @@ export const useAssetView = ({ setShowingAssetCount }: Props): ReturnProps => {
     setShowingAssetCount(filterAppliedSortedAssetSummaries.length)
     setPrevShowingAssetCount(filterAppliedSortedAssetSummaries.length)
   }
+
+  const refreshAvailabilityStatuses = useAssetAvailabilityStore(
+    (state) => state.refreshStatuses,
+  )
+
+  useEffect(() => {
+    refreshAvailabilityStatuses(
+      filterAppliedSortedAssetSummaries.map((asset) => asset.id),
+    )
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filterAppliedSortedAssetSummaries])
 
   return {
     layoutDivRef,

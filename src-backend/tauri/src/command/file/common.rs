@@ -129,7 +129,9 @@ pub async fn migrate_data_dir(
         new_preference.set_data_dir(new_path.clone());
 
         preference.overwrite(&new_preference);
-        loader::wrapper::save_preference_store(&preference).map_err(|e| e.to_string())?;
+        loader::wrapper::save_preference_store(&preference)
+            .await
+            .map_err(|e| e.to_string())?;
 
         cloned_pximg_resolver
             .lock()
