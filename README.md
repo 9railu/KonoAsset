@@ -1,8 +1,8 @@
 # KonoAsset
 
-![GitHub deployments](https://img.shields.io/github/deployments/siloneco/KonoAsset/release?style=flat)
-![GitHub Release](https://img.shields.io/github/v/release/siloneco/KonoAsset?label=Stable)
-![GitHub Release](https://img.shields.io/github/v/release/siloneco/KonoAsset?include_prereleases&label=Pre-Release)
+![GitHub deployments](https://img.shields.io/github/deployments/9railu/KonoAsset/release?style=flat)
+![GitHub Release](https://img.shields.io/github/v/release/9railu/KonoAsset?label=Stable)
+![GitHub Release](https://img.shields.io/github/v/release/9railu/KonoAsset?include_prereleases&label=Pre-Release)
 
 「このアセットにしよ！」 をもっと簡単にするための VRChat 向けアセット管理ツール
 
@@ -10,7 +10,7 @@
 
 ## インストール
 
-[Releases](https://github.com/siloneco/KonoAsset/releases/latest) を開き、`KonoAsset_X.X.X_x64-setup.exe` をクリックしてインストーラーをダウンロードして実行してください  
+[Releases](https://github.com/9railu/KonoAsset/releases/latest) を開き、`KonoAsset_X.X.X_x64-setup.exe` をクリックしてインストーラーをダウンロードして実行してください  
 X.X.X はバージョン情報になっています
 
 > [!WARNING]
